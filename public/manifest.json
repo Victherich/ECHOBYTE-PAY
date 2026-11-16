@@ -1,0 +1,24 @@
+{
+  "id": "/",
+  "name": "LIFEOS",
+  "short_name": "LIFEOS",
+  "description": "YOUR LIFE. ONE ORGANised SYSTEM",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1d8f4d",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

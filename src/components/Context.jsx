@@ -6,13 +6,12 @@ import Swal from "sweetalert2";
 import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
 import { auth, db, paymentDb } from "@/firebaseConfig";
 import {useRouter} from "next/navigation";
-import { useCart } from "@/components/CartContext";
  export const primaryColoring = "#1E5A44"
  export const secondaryColoring = "#E2B04A"
 export const Context = createContext(null);
 
 export function ContextProvider({ children }) {
-  const { clearCart } = useCart();
+
   const [showSubscriptionReminder, setShowSubscriptionReminder] = useState(false);
   const [user, setUser] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -49,55 +48,6 @@ const seller_email = "admin@pinklesnigerialimited.com"
   }, [paymentSession]);
 
 
-
-
-
-
-
-//after payment logic
-  // async function finalizeOnlinePaymentOrder(paymentData, verificationNumber) {
-  //   try {
-  //     const storedOrder = localStorage.getItem('pendingOrder');
-  //     if (!storedOrder) {
-  //       console.warn("No pending order found in localStorage.");
-  //       return;
-  //     }
-
-  //     const orderPayload = JSON.parse(storedOrder);
-
-  //     orderPayload.paymentData = paymentData;
-  //     orderPayload.paymentVerificationNumber = verificationNumber;
-
-  //     const docRef = await addDoc(collection(db, "orders"), orderPayload);
-
-  //     const buyerEmail = orderPayload.accountInfo?.email || '';
-  //     // const sellerEmail = 'victorndu393@gmail.com';
-  //     const sellerEmail = 'admin@kingswordcraft.com';
-
-  //     await fetch('/api/send-order-email', {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({
-  //         orderId: docRef.id,
-  //         payload: orderPayload,
-  //         recipients: [buyerEmail, sellerEmail].filter(Boolean)
-  //       })
-  //     }).catch((err) => {
-  //       console.error("Error triggering email notification:", err);
-  //     });
-
-  //     if (typeof clearCart === 'function') {
-  //       clearCart();
-  //     }
-  //     localStorage.removeItem('selectedAddress');
-  //     localStorage.removeItem('pendingOrder');
-
-  //   } catch (error) {
-  //     console.error("Error finalizing online payment order:", error);
-  //     Swal.fire('Error', 'Failed to save your order. Please contact support.', 'error');
-  //   throw error; // Re-throw so poller knows it failed if needed
-  //   }
-  // }
 
 
 
@@ -146,10 +96,7 @@ const seller_email = "admin@pinklesnigerialimited.com"
       console.error("Error triggering email notification (non-fatal):", emailErr);
     }
 
-    // 4. Guaranteed Cleanup (Runs regardless of email success/failure)
-    if (typeof clearCart === 'function') {
-      clearCart();
-    }
+ 
     localStorage.removeItem('selectedAddress');
     localStorage.removeItem('pendingOrder');
 

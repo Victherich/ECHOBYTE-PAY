@@ -7,8 +7,8 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { ContextProvider } from "@/components/Context";
-import { CartProvider } from "@/components/CartContext";
-import BookConsultationBanner from "@/components/BookConsultationBanner";
+import GlobalSwalStyle from "@/styles/GlobalSwalStyle";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,11 +21,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "PINKLES NG LTD | Empowering Brands. Building Legacies.",
-  description: "Empowering Brands. Building Legacies.",
-   icons: {
+  title: "LIFEOS",
+  description: "LIFEOS",
+  applicationName: "YOUR LIFE. ONE ORGANised SYSTEM",
+
+  manifest: "/manifest.json",
+
+  icons: {
     icon: "/favicon.ico",
+    apple: "/icons/logo.png",
   },
+
+  appleWebApp: {
+    capable: true,
+    title: "LIFEOS",
+    statusBarStyle: "default",
+  },
+
+  themeColor: "#1d8f4d",
 };
 
 export default function RootLayout({ children }) {
@@ -39,14 +52,15 @@ export default function RootLayout({ children }) {
         <StyledComponentsRegistry>
 
       
-          <CartProvider>
+    
              <ContextProvider>
-          <Header />
+          {/* <Header /> */}
+            <GlobalSwalStyle />
           {children}
-          <BookConsultationBanner/>
-          <Footer />
+         
+          {/* <Footer /> */}
           </ContextProvider>
-          </CartProvider>
+  
             </StyledComponentsRegistry>
         
       </body>

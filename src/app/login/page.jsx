@@ -1,986 +1,1062 @@
 
-
-// "use client";
-
-// import { useState, useEffect } from "react";
-// import { useRouter } from "next/navigation";
-// import styled, { keyframes } from "styled-components";
-// import Swal from "sweetalert2";
-// import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
-// import { auth } from "@/firebaseConfig";
-// import { Sparkles, ShieldCheck, Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
-// import { primaryColoring, secondaryColoring } from "@/components/Context";
-
-// // --- MAJINFOTEK & MODERN BRAND THEME ---
-// const brandCyan = secondaryColoring;
-// const brandDarkNavy = primaryColoring;
-// const brandGradient = `linear-gradient(135deg, ${primaryColoring} 0%, ${secondaryColoring} 100%)`;
-
-// // Animations
-// const floatAnimation = keyframes`
-//   0% { transform: translateY(0px) rotate(0deg); }
-//   50% { transform: translateY(-4px) rotate(1deg); }
-//   100% { transform: translateY(0px) rotate(0deg); }
-// `;
-
-// const PageContainer = styled.div`
-//   min-height: 100vh;
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   background-color: #f8fafc;
-//   padding: 32px 16px;
-//   position: relative;
-//   overflow: hidden;
-
-//   &::before {
-//     content: '';
-//     position: absolute;
-//     top: 0;
-//     left: 0;
-//     width: 100%;
-//     height: 100%;
-//     background: radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.05) 0%, transparent 40%),
-//                 radial-gradient(circle at 90% 80%, rgba(28, 59, 164, 0.05) 0%, transparent 40%);
-//     pointer-events: none;
-//     z-index: 1;
-//   }
-// `;
-
-// const AuthWrapper = styled.div`
-//   display: grid;
-//   grid-template-columns: 1fr;
-//   width: 100%;
-//   max-width: 1000px;
-//   background: #ffffff;
-//   border-radius: 24px;
-//   border: 1px solid #e2e8f0;
-//   box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.07);
-//   overflow: hidden;
-//   position: relative;
-//   z-index: 2;
-
-//   @media (min-width: 768px) {
-//     grid-template-columns: 1.1fr 1fr;
-//   }
-// `;
-
-// const BrandingSide = styled.div`
-//   background: ${brandGradient};
-//   color: #ffffff;
-//   padding: 40px;
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: space-between;
-//   position: relative;
-//   overflow: hidden;
-
-//   &::after {
-//     content: "";
-//     position: absolute;
-//     inset: 0;
-//     background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.15), transparent 60%);
-//     z-index: 1;
-//   }
-
-//   @media (min-width: 768px) {
-//     padding: 50px;
-//   }
-// `;
-
-// const BrandLogo = styled.div`
-//   display: inline-flex;
-//   align-items: center;
-//   gap: 8px;
-//   font-size: 1.25rem;
-//   font-weight: 800;
-//   letter-spacing: -0.02em;
-//   color: #ffffff;
-//   margin: 0;
-//   position: relative;
-//   z-index: 2;
-// `;
-
-// const Badge = styled.div`
-//   display: inline-flex;
-//   align-items: center;
-//   gap: 6px;
-//   padding: 6px 14px;
-//   border-radius: 9999px;
-//   background: rgba(255, 255, 255, 0.15);
-//   backdrop-filter: blur(8px);
-//   border: 1px solid rgba(255, 255, 255, 0.25);
-//   color: #ffffff;
-//   font-size: 0.75rem;
-//   font-weight: 700;
-//   text-transform: uppercase;
-//   letter-spacing: 0.08em;
-//   margin-bottom: 16px;
-//   animation: ${floatAnimation} 4s ease-in-out infinite;
-//   width: fit-content;
-// `;
-
-// const BrandingContent = styled.div`
-//   position: relative;
-//   z-index: 2;
-//   display: flex;
-//   flex-direction: column;
-//   gap: 16px;
-//   margin: auto 0;
-//   padding: 20px 0;
-// `;
-
-// const Headline = styled.h1`
-//   font-size: clamp(2rem, 3vw, 2.5rem);
-//   font-weight: 800;
-//   line-height: 1.15;
-//   letter-spacing: -0.03em;
-//   margin: 0;
-//   color: #ffffff;
-// `;
-
-// const Subtext = styled.p`
-//   font-size: 0.95rem;
-//   line-height: 1.6;
-//   color: #f1f5f9;
-//   opacity: 0.9;
-//   margin: 0;
-//   max-width: 340px;
-// `;
-
-// const FeatureList = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   gap: 12px;
-//   position: relative;
-//   z-index: 2;
-//   margin-top: 10px;
-// `;
-
-// const FeatureItem = styled.div`
-//   display: flex;
-//   align-items: center;
-//   gap: 10px;
-//   font-size: 0.85rem;
-//   color: #e2e8f0;
-//   font-weight: 500;
-
-//   svg {
-//     color: #c4b5fd;
-//     width: 1rem;
-//     height: 1rem;
-//     flex-shrink: 0;
-//   }
-// `;
-
-// const FormSide = styled.div`
-//   padding: 40px;
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: center;
-//   color: #475569;
-//   background: #ffffff;
-
-//   @media (min-width: 768px) {
-//     padding: 50px;
-//   }
-// `;
-
-// const FormHeader = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   gap: 6px;
-//   margin-bottom: 28px;
-// `;
-
-// const Title = styled.h2`
-//   font-size: 1.85rem;
-//   font-weight: 800;
-//   margin: 0;
-//   color: #0f172a;
-//   letter-spacing: -0.02em;
-// `;
-
-// const FormSubtitle = styled.p`
-//   font-size: 0.9rem;
-//   color: #64748b;
-//   margin: 0;
-// `;
-
-// const FormGrid = styled.form`
-//   display: flex;
-//   flex-direction: column;
-//   gap: 20px;
-// `;
-
-// const InputGroup = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   gap: 8px;
-// `;
-
-// const Label = styled.label`
-//   font-size: 0.85rem;
-//   font-weight: 600;
-//   color: #334155;
-// `;
-
-// const InputWrapper = styled.div`
-//   position: relative;
-//   width: 100%;
-// `;
-
-// const InputIconWrapper = styled.div`
-//   position: absolute;
-//   left: 14px;
-//   top: 50%;
-//   transform: translateY(-50%);
-//   color: #94a3b8;
-//   display: flex;
-//   align-items: center;
-//   pointer-events: none;
-
-//   svg {
-//     width: 1.15rem;
-//     height: 1.15rem;
-//   }
-// `;
-
-// const Input = styled.input`
-//   width: 100%;
-//   padding: 12px 16px 12px 44px;
-//   border-radius: 12px;
-//   background-color: #f8fafc !important;
-//   color: #0f172a !important;
-//   border: 1px solid #cbd5e1;
-//   font-size: 0.95rem;
-//   outline: none;
-//   transition: all 0.2s ease;
-//   box-sizing: border-box;
-
-//   &::placeholder {
-//     color: #94a3b8;
-//   }
-
-//   &:focus {
-//     border-color: ${brandCyan};
-//     background-color: #ffffff !important;
-//     box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
-//   }
-// `;
-
-// const EyeButton = styled.button`
-//   position: absolute;
-//   right: 14px;
-//   top: 50%;
-//   transform: translateY(-50%);
-//   background: transparent;
-//   border: none;
-//   cursor: pointer;
-//   color: #64748b;
-//   display: flex;
-//   align-items: center;
-//   padding: 4px;
-//   transition: color 0.2s ease;
-
-//   &:hover {
-//     color: ${brandCyan};
-//   }
-
-//   svg {
-//     width: 1.15rem;
-//     height: 1.15rem;
-//   }
-// `;
-
-// const SubmitButton = styled.button`
-//   width: 100%;
-//   display: inline-flex;
-//   align-items: center;
-//   justify-content: center;
-//   gap: 8px;
-//   padding: 14px 24px;
-//   border-radius: 12px;
-//   background: ${brandGradient};
-//   color: #ffffff;
-//   font-weight: 700;
-//   font-size: 1rem;
-//   border: none;
-//   cursor: pointer;
-//   box-shadow: 0 4px 16px rgba(139, 92, 246, 0.25);
-//   transition: all 0.3s ease;
-//   margin-top: 6px;
-
-//   &:hover {
-//     opacity: 0.92;
-//     transform: translateY(-2px);
-//     box-shadow: 0 6px 20px rgba(139, 92, 246, 0.35);
-//   }
-
-//   &:disabled {
-//     opacity: 0.7;
-//     cursor: not-allowed;
-//     transform: none;
-//   }
-// `;
-
-// const LinkContainer = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   gap: 12px;
-//   margin-top: 6px;
-//   text-align: center;
-// `;
-
-// const LinkText = styled.p`
-//   margin: 0;
-//   cursor: pointer;
-//   color: #64748b;
-//   font-size: 0.9rem;
-
-//   span {
-//     color: ${brandCyan};
-//     font-weight: 700;
-//     transition: text-decoration 0.2s;
-
-//     &:hover {
-//       text-decoration: underline;
-//     }
-//   }
-// `;
-
-// const LoadingContainer = styled.div`
-//   min-height: 100vh;
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   background: #f8fafc;
-//   color: #0f172a;
-//   font-size: 1.1rem;
-//   font-weight: 600;
-//   padding: 24px;
-// `;
-
-// // ✨ USER LOGIN COMPONENT
-// export default function UserLogin() {
-//   const router = useRouter();
-//   const [loading, setLoading] = useState(true);
-//   const [form, setForm] = useState({ email: "", password: "" });
-//   const [showPassword, setShowPassword] = useState(false);
-
-//   const handleChange = (e) => {
-//     setForm({ ...form, [e.target.name]: e.target.value });
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-
-//     Swal.fire({
-//       title: "Please wait...",
-//       text: "Authenticating your session...",
-//       allowOutsideClick: false,
-//       didOpen: () => Swal.showLoading(),
-//       background: "#ffffff",
-//       color: "#0f172a",
-//     });
-
-//     try {
-//       const { email, password } = form;
-//       await signInWithEmailAndPassword(auth, email, password);
-//       Swal.fire({
-//         title: "Success ✅",
-//         text: "Logged in successfully",
-//         icon: "success",
-//         confirmButtonColor: "#8b5cf6",
-//         background: "#ffffff",
-//         color: "#0f172a",
-//       });
-//       router.push("/dashboard");
-//     } catch (error) {
-//       Swal.fire({
-//         title: "Login Failed ❌",
-//         text: error.message,
-//         icon: "error",
-//         confirmButtonColor: "#8b5cf6",
-//         background: "#ffffff",
-//         color: "#0f172a",
-//       });
-//     }
-//   };
-
-//   useEffect(() => {
-//     const unsubscribe = onAuthStateChanged(auth, (user) => {
-//       setLoading(false);
-//       if (user) router.push("/dashboard");
-//     });
-
-//     return () => unsubscribe();
-//   }, [router]);
-
-//   if (loading) return <LoadingContainer>Loading...</LoadingContainer>;
-
-//   return (
-//     <PageContainer>
-//       <AuthWrapper>
-//         {/* Left Visual Branding Panel */}
-//         <BrandingSide>
-//           <BrandLogo>
-//             <Sparkles className="w-5 h-5 text-purple-300" />
-//             <span>SHEALUXE</span>
-//           </BrandLogo>
-
-//           <BrandingContent>
-//             <Badge>
-//               <ShieldCheck className="w-3.5 h-3.5 text-purple-300" />
-//               <span>Secure Portal</span>
-//             </Badge>
-//             <Headline>Welcome Back</Headline>
-//             <Subtext>
-//               Log in to access your dashboard, manage system resources, and experience modern transactions seamlessly.
-//             </Subtext>
-//           </BrandingContent>
-
-//           <FeatureList>
-//             <FeatureItem>
-//               <ShieldCheck />
-//               Enterprise-grade encryption and privacy protection
-//             </FeatureItem>
-//             <FeatureItem>
-//               <Sparkles />
-//               Real-time synchronization across your devices
-//             </FeatureItem>
-//           </FeatureList>
-//         </BrandingSide>
-
-//         {/* Right Form Panel */}
-//         <FormSide>
-//           <FormHeader>
-//             <Title>Sign In</Title>
-//             <FormSubtitle>Enter your account details to proceed</FormSubtitle>
-//           </FormHeader>
-
-//           <FormGrid onSubmit={handleSubmit}>
-//             <InputGroup>
-//               <Label>Email Address</Label>
-//               <InputWrapper>
-//                 <InputIconWrapper>
-//                   <Mail />
-//                 </InputIconWrapper>
-//                 <Input
-//                   name="email"
-//                   type="email"
-//                   placeholder="name@example.com"
-//                   value={form.email}
-//                   onChange={handleChange}
-//                   required
-//                 />
-//               </InputWrapper>
-//             </InputGroup>
-
-//             <InputGroup>
-//               <Label>Password</Label>
-//               <InputWrapper>
-//                 <InputIconWrapper>
-//                   <Lock />
-//                 </InputIconWrapper>
-//                 <Input
-//                   name="password"
-//                   type={showPassword ? "text" : "password"}
-//                   placeholder="••••••••"
-//                   value={form.password}
-//                   onChange={handleChange}
-//                   required
-//                 />
-//                 <EyeButton type="button" onClick={() => setShowPassword((prev) => !prev)}>
-//                   {showPassword ? <EyeOff /> : <Eye /> }
-//                 </EyeButton>
-//               </InputWrapper>
-//             </InputGroup>
-
-//             <SubmitButton type="submit">
-//               <span>Sign In</span>
-//               <ArrowRight className="w-4 h-4" />
-//             </SubmitButton>
-
-//             <LinkContainer>
-//               <LinkText onClick={() => router.push("/signup")}>
-//                 Don't have an account? <span>Sign Up</span>
-//               </LinkText>
-
-//               <LinkText onClick={() => router.push("/forgot-password")}>
-//                 <span>Forgot Password?</span>
-//               </LinkText>
-//             </LinkContainer>
-//           </FormGrid>
-//         </FormSide>
-//       </AuthWrapper>
-//     </PageContainer>
-//   );
-// }
-
-
-
-
-
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
-import Swal from "sweetalert2";
+
 import {
   signInWithEmailAndPassword,
-  signInWithPopup,
   GoogleAuthProvider,
-  onAuthStateChanged,
+  signInWithPopup,
+  sendPasswordResetEmail,
 } from "firebase/auth";
-import { auth } from "@/firebaseConfig";
-import { Mail, Lock, LogIn } from "lucide-react";
-import { secondaryColoring } from "@/components/Context";
 
-/* ================= COLORS & BRANDING ================= */
-const GoldAccent = secondaryColoring || "#E2B04A";
-const GreenBtnBg = "#11382b";
-const DarkText = "#1A1A1A";
-const MutedText = "#66625b";
-const WarmBg = "#FAF8F4";
-const CardBg = "#FFFFFF";
-const InputBorder = "#E2DDD5";
+import {
+  doc,
+  getDoc,
+  setDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 
-/* ================= PAGE & CARD CONTAINERS ================= */
-const PageContainer = styled.div`
+import { auth, db } from "@/firebaseConfig";
+
+export default function LoginPage() {
+  const router = useRouter();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [forgotMode, setForgotMode] = useState(false);
+
+  const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
+
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const getFirebaseError = (err) => {
+    switch (err.code) {
+      case "auth/invalid-email":
+        return "Please enter a valid email address.";
+
+      case "auth/user-not-found":
+      case "auth/wrong-password":
+      case "auth/invalid-credential":
+        return "Incorrect email address or password.";
+
+      case "auth/user-disabled":
+        return "This account has been disabled.";
+
+      case "auth/too-many-requests":
+        return "Too many attempts. Please try again later.";
+
+      case "auth/network-request-failed":
+        return "Network error. Please check your internet connection.";
+
+      case "auth/popup-closed-by-user":
+        return "Google sign-in was cancelled.";
+
+      case "auth/popup-blocked":
+        return "Your browser blocked the Google sign-in popup.";
+
+      default:
+        return err.message || "Something went wrong. Please try again.";
+    }
+  };
+
+  // EMAIL LOGIN
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    setError("");
+    setSuccess("");
+
+    const cleanEmail = email.trim().toLowerCase();
+
+    if (!cleanEmail || !password) {
+      setError("Please enter your email address and password.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      await signInWithEmailAndPassword(
+        auth,
+        cleanEmail,
+        password
+      );
+
+      router.replace("/dashboard");
+    } catch (err) {
+      console.error("Login error:", err);
+      setError(getFirebaseError(err));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // GOOGLE LOGIN
+  const handleGoogleLogin = async () => {
+    try {
+      setError("");
+      setSuccess("");
+      setGoogleLoading(true);
+
+      const provider = new GoogleAuthProvider();
+
+      provider.setCustomParameters({
+        prompt: "select_account",
+      });
+
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      // Check whether the user's LIFEOS profile exists.
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      // Create profile only if it does not already exist.
+      if (!userSnap.exists()) {
+        await setDoc(userRef, {
+          uid: user.uid,
+          name: user.displayName || "LIFEOS User",
+          email: user.email || "",
+          phone: user.phoneNumber || "",
+          role: "user",
+          createdAt: serverTimestamp(),
+        });
+      }
+
+      router.replace("/dashboard");
+    } catch (err) {
+      console.error("Google login error:", err);
+      setError(getFirebaseError(err));
+    } finally {
+      setGoogleLoading(false);
+    }
+  };
+
+  // FORGOT PASSWORD
+  const handlePasswordReset = async (e) => {
+    e.preventDefault();
+
+    setError("");
+    setSuccess("");
+
+    const cleanEmail = email.trim().toLowerCase();
+
+    if (!cleanEmail) {
+      setError("Please enter your email address.");
+      return;
+    }
+
+    try {
+      setResetLoading(true);
+
+      await sendPasswordResetEmail(auth, cleanEmail);
+
+      setSuccess(
+        "If an account exists for this email, password reset instructions will be sent."
+      );
+    } catch (err) {
+      console.error("Password reset error:", err);
+      setError(getFirebaseError(err));
+    } finally {
+      setResetLoading(false);
+    }
+  };
+
+  return (
+    <Page>
+      <BackgroundGlow />
+
+      <TopBar>
+        <Brand href="/">
+          <BrandLogo>✳</BrandLogo>
+          <span>LIFEOS</span>
+        </Brand>
+
+        <TopLogin>
+          New to LIFEOS?
+          <Link href="/register">Create account</Link>
+        </TopLogin>
+      </TopBar>
+
+      <Main>
+        <LeftPanel>
+          <LeftContent>
+            <WelcomeBadge>
+              <span>✳</span>
+              YOUR LIFE. ONE ORGANIZED SYSTEM.
+            </WelcomeBadge>
+
+            <h1>
+              Welcome back to
+              <GradientText> your life.</GradientText>
+            </h1>
+
+            <Description>
+              Your work, business, family, finances, goals and everyday
+              responsibilities — all organized in one personal
+              life-management workspace.
+            </Description>
+
+            <Benefits>
+              <Benefit>
+                <BenefitIcon>✓</BenefitIcon>
+                Everything in one organized workspace
+              </Benefit>
+
+              <Benefit>
+                <BenefitIcon>✓</BenefitIcon>
+                Stay focused on your daily priorities
+              </Benefit>
+
+              <Benefit>
+                <BenefitIcon>✓</BenefitIcon>
+                Keep track of goals and progress
+              </Benefit>
+
+              <Benefit>
+                <BenefitIcon>✓</BenefitIcon>
+                Pick up right where you left off
+              </Benefit>
+            </Benefits>
+
+            <QuoteCard>
+              <QuoteIcon>“</QuoteIcon>
+              <p>
+                You don't have to figure everything out at once.
+                Just take control of today.
+              </p>
+              <span>Welcome back to LIFEOS.</span>
+            </QuoteCard>
+          </LeftContent>
+        </LeftPanel>
+
+        <RightPanel>
+          <LoginCard>
+            <MobileBrand>
+              <BrandLogo>✳</BrandLogo>
+              LIFEOS
+            </MobileBrand>
+
+            <CardHeader>
+              <StepLabel>
+                <span>01</span> / YOUR PERSONAL WORKSPACE
+              </StepLabel>
+
+              <h2>
+                {forgotMode ? "Reset your password" : "Welcome back"}
+              </h2>
+
+              <p>
+                {forgotMode
+                  ? "Enter your email address and we'll send you instructions to reset your password."
+                  : "Sign in to continue organizing your life."}
+              </p>
+            </CardHeader>
+
+            {error && (
+              <ErrorMessage role="alert">
+                <span>!</span>
+                {error}
+              </ErrorMessage>
+            )}
+
+            {success && (
+              <SuccessMessage role="status">
+                <span>✓</span>
+                {success}
+              </SuccessMessage>
+            )}
+
+            {!forgotMode ? (
+              <>
+                <GoogleButton
+                  type="button"
+                  onClick={handleGoogleLogin}
+                  disabled={loading || googleLoading}
+                >
+                  {googleLoading ? (
+                    <Spinner />
+                  ) : (
+                    <GoogleIcon>
+                      <svg viewBox="0 0 48 48" width="20" height="20">
+                        <path
+                          fill="#4285F4"
+                          d="M43.6 24.5c0-1.4-.1-2.8-.4-4.1H24v7.8h11c-.5 2.5-1.9 4.7-4 6.1v5.1h6.5c3.8-3.5 6.1-8.7 6.1-14.9z"
+                        />
+                        <path
+                          fill="#34A853"
+                          d="M24 44c5.4 0 9.9-1.8 13.2-4.8l-6.5-5.1c-1.8 1.2-4.1 2-6.7 2-5.2 0-9.6-3.5-11.2-8.2H6.1v5.2C9.4 39.6 16.2 44 24 44z"
+                        />
+                        <path
+                          fill="#FBBC05"
+                          d="M12.8 27.9c-.4-1.2-.7-2.5-.7-3.9s.3-2.7.7-3.9v-5.2H6.1C4.7 17.7 4 20.8 4 24s.7 6.3 2.1 9.1l6.7-5.2z"
+                        />
+                        <path
+                          fill="#EA4335"
+                          d="M24 11.9c2.9 0 5.5 1 7.5 2.9l5.8-5.8C33.8 5.8 29.4 4 24 4 16.2 4 9.4 8.4 6.1 14.9l6.7 5.2c1.6-4.7 6-8.2 11.2-8.2z"
+                        />
+                      </svg>
+                    </GoogleIcon>
+                  )}
+
+                  {googleLoading
+                    ? "Connecting to Google..."
+                    : "Continue with Google"}
+                </GoogleButton>
+
+                <Divider>
+                  <span>OR SIGN IN WITH EMAIL</span>
+                </Divider>
+
+                <Form onSubmit={handleLogin}>
+                  <FormGroup>
+                    <Label htmlFor="email">Email address</Label>
+
+                    <InputWrapper>
+                      <InputIcon>✉</InputIcon>
+
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="you@example.com"
+                        value={email}
+                        onChange={(e) => {
+                          setEmail(e.target.value);
+                          setError("");
+                          setSuccess("");
+                        }}
+                        autoComplete="email"
+                        required
+                      />
+                    </InputWrapper>
+                  </FormGroup>
+
+                  <FormGroup>
+                    <PasswordHeader>
+                      <Label htmlFor="password">Password</Label>
+
+                      <ForgotLink
+                        type="button"
+                        onClick={() => {
+                          setForgotMode(true);
+                          setError("");
+                          setSuccess("");
+                        }}
+                      >
+                        Forgot password?
+                      </ForgotLink>
+                    </PasswordHeader>
+
+                    <InputWrapper>
+                      <InputIcon>⌑</InputIcon>
+
+                      <Input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Enter your password"
+                        value={password}
+                        onChange={(e) => {
+                          setPassword(e.target.value);
+                          setError("");
+                        }}
+                        autoComplete="current-password"
+                        required
+                      />
+
+                      <EyeButton
+                        type="button"
+                        onClick={() =>
+                          setShowPassword(!showPassword)
+                        }
+                        aria-label={
+                          showPassword ? "Hide password" : "Show password"
+                        }
+                      >
+                        {showPassword ? "Hide" : "Show"}
+                      </EyeButton>
+                    </InputWrapper>
+                  </FormGroup>
+
+                  <SubmitButton
+                    type="submit"
+                    disabled={loading || googleLoading}
+                  >
+                    {loading ? (
+                      <>
+                        <Spinner />
+                        Signing you in...
+                      </>
+                    ) : (
+                      <>
+                        Sign in to LIFEOS
+                        <span>→</span>
+                      </>
+                    )}
+                  </SubmitButton>
+                </Form>
+              </>
+            ) : (
+              <Form onSubmit={handlePasswordReset}>
+                <FormGroup>
+                  <Label htmlFor="resetEmail">Email address</Label>
+
+                  <InputWrapper>
+                    <InputIcon>✉</InputIcon>
+
+                    <Input
+                      id="resetEmail"
+                      type="email"
+                      placeholder="you@example.com"
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        setError("");
+                        setSuccess("");
+                      }}
+                      autoComplete="email"
+                      required
+                    />
+                  </InputWrapper>
+                </FormGroup>
+
+                <SubmitButton
+                  type="submit"
+                  disabled={resetLoading}
+                >
+                  {resetLoading ? (
+                    <>
+                      <Spinner />
+                      Sending instructions...
+                    </>
+                  ) : (
+                    <>
+                      Send reset instructions
+                      <span>→</span>
+                    </>
+                  )}
+                </SubmitButton>
+
+                <BackButton
+                  type="button"
+                  onClick={() => {
+                    setForgotMode(false);
+                    setError("");
+                    setSuccess("");
+                  }}
+                >
+                  ← Back to login
+                </BackButton>
+              </Form>
+            )}
+
+            {!forgotMode && (
+              <BottomLogin>
+                Don't have a LIFEOS account?{" "}
+                <Link href="/register">Create account</Link>
+              </BottomLogin>
+            )}
+
+            <SecureNote>
+              <span>♢</span>
+              Your personal workspace is private and secure.
+            </SecureNote>
+          </LoginCard>
+        </RightPanel>
+      </Main>
+
+      <Footer>
+        <span>© {new Date().getFullYear()} LIFEOS</span>
+        <span>Your Personal Life Operating System.</span>
+      </Footer>
+    </Page>
+  );
+}
+
+/* ================= STYLES ================= */
+
+const Page = styled.main`
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: ${WarmBg};
-  padding: 32px 16px;
-  box-sizing: border-box;
-  font-family: inherit;
+  position: relative;
+  overflow: hidden;
+  background: #080d1b;
+  color: #f8faff;
+  font-family: Arial, Helvetica, sans-serif;
 `;
 
-const HeaderWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  margin-bottom: 2rem;
+const BackgroundGlow = styled.div`
+  position: absolute;
+  width: 550px;
+  height: 550px;
+  top: 100px;
+  left: -200px;
+  border-radius: 50%;
+  background: rgba(102, 81, 255, 0.12);
+  filter: blur(130px);
+  pointer-events: none;
 `;
 
-const IconHeaderBadge = styled.div`
-  width: 52px;
-  height: 52px;
-  border-radius: 12px;
-  background-color: ${GreenBtnBg};
-  color: #ffffff;
+const TopBar = styled.header`
+  max-width: 1300px;
+  height: 78px;
+  padding: 0 30px;
+  margin: auto;
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin-bottom: 1.25rem;
-  box-shadow: 0 4px 14px rgba(17, 56, 43, 0.2);
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+  border-bottom: 1px solid rgba(255,255,255,.07);
 
-  svg {
-    width: 24px;
-    height: 24px;
+  @media(max-width: 600px) {
+    height: 68px;
+    padding: 0 20px;
   }
 `;
 
-const Title = styled.h1`
-  font-family: "Playfair Display", Georgia, serif;
-  font-size: 2.2rem;
-  font-weight: 500;
-  color: ${DarkText};
-  margin: 0 0 0.4rem 0;
-  letter-spacing: -0.01em;
-`;
-
-const Subtitle = styled.p`
-  font-size: 0.9rem;
-  color: ${MutedText};
-  margin: 0;
-  font-weight: 300;
-`;
-
-const AuthCard = styled.div`
-  width: 100%;
-  max-width: 440px;
-  background: ${CardBg};
-  border: 1px solid ${InputBorder};
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
-  box-sizing: border-box;
-`;
-
-/* ================= GOOGLE BUTTON ================= */
-const GoogleButton = styled.button`
-  width: 100%;
+const Brand = styled(Link)`
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 10px;
-  padding: 0.8rem 1rem;
-  background-color: #ffffff;
-  border: 1px solid ${InputBorder};
-  border-radius: 4px;
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: ${DarkText};
-  cursor: pointer;
-  transition: all 0.2s ease;
+  color: white;
+  text-decoration: none;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -1px;
+`;
 
-  &:hover {
-    border-color: ${GoldAccent};
-    background-color: #fafafa;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  }
+const BrandLogo = styled.span`
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: linear-gradient(135deg, #765df5, #39b5f2);
+  color: white;
+  font-size: 24px;
+`;
 
-  svg {
-    width: 18px;
-    height: 18px;
+const TopLogin = styled.div`
+  color: #929db2;
+  font-size: 12px;
+
+  a {
+    margin-left: 8px;
+    color: #a99aff;
+    font-weight: 800;
+    text-decoration: none;
   }
 `;
 
-/* ================= DIVIDER ================= */
-const Divider = styled.div`
+const Main = styled.div`
+  max-width: 1300px;
+  min-height: calc(100vh - 130px);
+  padding: 45px 30px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: .8fr 1.2fr;
+  align-items: center;
+  gap: 75px;
+  position: relative;
+  z-index: 1;
+
+  @media(max-width: 950px) {
+    grid-template-columns: 1fr;
+    gap: 35px;
+    max-width: 600px;
+    padding: 35px 20px 55px;
+  }
+`;
+
+const LeftPanel = styled.div`
+  @media(max-width: 950px) {
+    display: none;
+  }
+`;
+
+const LeftContent = styled.div`
+  max-width: 460px;
+
+  h1 {
+    margin: 27px 0 18px;
+    font-size: clamp(42px, 4.6vw, 60px);
+    letter-spacing: -3px;
+    line-height: 1.08;
+  }
+`;
+
+const WelcomeBadge = styled.div`
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 13px;
+  border: 1px solid rgba(139,125,255,.25);
+  border-radius: 30px;
+  color: #b6aaff;
+  background: rgba(105,83,255,.09);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+
+  span { font-size: 16px; }
+`;
+
+const GradientText = styled.span`
+  background: linear-gradient(100deg, #a99aff, #69caff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+`;
+
+const Description = styled.p`
+  color: #9ca9bf;
+  font-size: 14px;
+  line-height: 1.9;
+`;
+
+const Benefits = styled.div`
+  display: grid;
+  gap: 17px;
+  margin-top: 32px;
+`;
+
+const Benefit = styled.div`
   display: flex;
   align-items: center;
-  margin: 1.5rem 0;
-  color: #a8a299;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
+  gap: 12px;
+  color: #dce3f0;
+  font-size: 13px;
+`;
 
-  &::before,
-  &::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background-color: ${InputBorder};
+const BenefitIcon = styled.span`
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  background: #183d35;
+  color: #6ce3b7;
+  font-size: 12px;
+`;
+
+const QuoteCard = styled.div`
+  margin-top: 45px;
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid #26324a;
+  background: rgba(255,255,255,.025);
+
+  p {
+    margin: 5px 0 10px;
+    color: #e0e5f0;
+    font-size: 13px;
+    line-height: 1.7;
   }
 
   span {
-    padding: 0 0.8rem;
+    color: #8591a8;
+    font-size: 10px;
   }
 `;
 
-/* ================= FORM STYLES ================= */
+const QuoteIcon = styled.div`
+  color: #a99aff;
+  font-size: 35px;
+  line-height: 1;
+`;
+
+const RightPanel = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const LoginCard = styled.div`
+  width: 100%;
+  max-width: 570px;
+  padding: 37px;
+  border: 1px solid #28344b;
+  border-radius: 25px;
+  background: linear-gradient(145deg, #131e33, #0e1628);
+  box-shadow: 0 25px 80px rgba(0,0,0,.3);
+
+  @media(max-width: 600px) {
+    padding: 25px 19px;
+    border-radius: 20px;
+  }
+`;
+
+const MobileBrand = styled.div`
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-bottom: 28px;
+  font-size: 21px;
+  font-weight: 900;
+
+  ${BrandLogo} {
+    width: 32px;
+    height: 32px;
+  }
+
+  @media(max-width: 950px) {
+    display: flex;
+  }
+`;
+
+const CardHeader = styled.div`
+  margin-bottom: 23px;
+
+  h2 {
+    margin: 14px 0 7px;
+    font-size: 28px;
+    letter-spacing: -1px;
+  }
+
+  p {
+    margin: 0;
+    color: #98a5bb;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  @media(max-width: 600px) {
+    h2 { font-size: 25px; }
+  }
+`;
+
+const StepLabel = styled.div`
+  color: #a99aff;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 1.2px;
+
+  span {
+    display: inline-grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    margin-right: 7px;
+    border-radius: 7px;
+    background: rgba(120,98,255,.2);
+  }
+`;
+
+const GoogleButton = styled.button`
+  width: 100%;
+  height: 49px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border: 1px solid #3a465c;
+  border-radius: 11px;
+  background: #f9fbff;
+  color: #202b40;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: .2s;
+
+  &:hover:not(:disabled) {
+    background: #eaf0fb;
+  }
+
+  &:disabled {
+    opacity: .65;
+    cursor: not-allowed;
+  }
+`;
+
+const GoogleIcon = styled.span`
+  display: flex;
+  align-items: center;
+`;
+
+const Divider = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 23px 0;
+  color: #78869d;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+
+  &::before, &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #2c3850;
+  }
+`;
+
+const ErrorMessage = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  margin-bottom: 17px;
+  border: 1px solid rgba(255,105,105,.25);
+  border-radius: 10px;
+  background: rgba(255,70,70,.08);
+  color: #ffaaaa;
+  font-size: 11px;
+  line-height: 1.6;
+
+  span {
+    flex-shrink: 0;
+    width: 17px;
+    height: 17px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(255,100,100,.18);
+    font-weight: 900;
+  }
+`;
+
+const SuccessMessage = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  margin-bottom: 17px;
+  border: 1px solid rgba(67, 220, 153, .25);
+  border-radius: 10px;
+  background: rgba(40, 190, 130, .08);
+  color: #8ce8bf;
+  font-size: 11px;
+  line-height: 1.6;
+
+  span {
+    flex-shrink: 0;
+    font-weight: 900;
+  }
+`;
+
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 17px;
 `;
 
 const FormGroup = styled.div`
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-`;
-
-const LabelRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  gap: 8px;
 `;
 
 const Label = styled.label`
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: ${DarkText};
-`;
-
-const ForgotLink = styled.span`
-  font-size: 0.78rem;
-  color: ${GreenBtnBg};
-  cursor: pointer;
-
-  &:hover {
-    text-decoration: underline;
-  }
+  color: #d5dcec;
+  font-size: 11px;
+  font-weight: 750;
 `;
 
 const InputWrapper = styled.div`
-  position: relative;
-  width: 100%;
-`;
-
-const InputIconWrapper = styled.div`
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #a8a299;
+  min-width: 0;
+  height: 49px;
   display: flex;
   align-items: center;
-  pointer-events: none;
+  gap: 10px;
+  padding: 0 12px;
+  border: 1px solid #35425a;
+  border-radius: 10px;
+  background: #0c1425;
+  transition: border .2s;
 
-  svg {
-    width: 16px;
-    height: 16px;
+  &:focus-within {
+    border-color: #8878ff;
+    box-shadow: 0 0 0 3px rgba(117,94,255,.1);
   }
+`;
+
+const InputIcon = styled.span`
+  flex-shrink: 0;
+  color: #8996b0;
+  font-size: 16px;
 `;
 
 const Input = styled.input`
+  min-width: 0;
   width: 100%;
-  padding: 0.75rem 0.75rem 0.75rem 38px;
-  border-radius: 4px;
-  background-color: #ffffff;
-  color: ${DarkText};
-  border: 1px solid ${InputBorder};
-  font-size: 0.88rem;
+  height: 100%;
+  padding: 0;
+  border: none;
   outline: none;
-  box-sizing: border-box;
-  transition: all 0.2s ease;
+  background-color: #0c1425 !important;
+  color: #ffffff !important;
+  font-size: 12px;
+  appearance: none;
+  -webkit-appearance: none;
+  color-scheme: dark;
 
   &::placeholder {
-    color: #a8a299;
-    font-weight: 300;
+    color: #68758d;
+    opacity: 1;
   }
 
-  &:focus {
-    border-color: ${GoldAccent};
-    box-shadow: 0 0 0 2px rgba(226, 176, 74, 0.15);
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    -webkit-text-fill-color: #ffffff !important;
+    -webkit-box-shadow: 0 0 0 1000px #0c1425 inset !important;
+    box-shadow: 0 0 0 1000px #0c1425 inset !important;
+    background-color: #0c1425 !important;
+    caret-color: #ffffff;
+    border-radius: 8px;
   }
+`;
+
+const PasswordHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  ${Label} {
+    margin-bottom: 0;
+  }
+`;
+
+const ForgotLink = styled.button`
+  padding: 0;
+  border: none;
+  background: none;
+  color: #a99aff;
+  font-size: 10px;
+  font-weight: 800;
+  cursor: pointer;
+
+  &:hover {
+    color: #c9bdff;
+  }
+`;
+
+const EyeButton = styled.button`
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  color: #a99aff;
+  font-size: 9px;
+  font-weight: 800;
+  cursor: pointer;
 `;
 
 const SubmitButton = styled.button`
   width: 100%;
-  padding: 0.85rem;
-  background-color: ${GreenBtnBg};
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 0.88rem;
-  letter-spacing: 0.05em;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  margin-top: 0.5rem;
-
-  &:hover {
-    opacity: 0.92;
-    transform: translateY(-1px);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-`;
-
-const FooterText = styled.p`
-  font-size: 0.85rem;
-  color: ${MutedText};
-  margin-top: 1.5rem;
-  text-align: center;
-
-  span {
-    color: ${GreenBtnBg};
-    font-weight: 700;
-    cursor: pointer;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-`;
-
-const LoadingContainer = styled.div`
-  min-height: 100vh;
+  min-height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: ${WarmBg};
-  color: ${DarkText};
-  font-size: 1rem;
-  font-weight: 500;
+  gap: 12px;
+  margin-top: 5px;
+  border: none;
+  border-radius: 11px;
+  background: linear-gradient(110deg, #7059f5, #477eea);
+  color: white;
+  font-size: 12px;
+  font-weight: 850;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(94,83,239,.2);
+  transition: .2s;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 13px 30px rgba(94,83,239,.35);
+  }
+
+  &:disabled {
+    opacity: .65;
+    cursor: not-allowed;
+  }
+
+  span {
+    font-size: 17px;
+  }
 `;
 
-/* ================= MAIN LOGIN COMPONENT ================= */
-export default function UserLogin() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [form, setForm] = useState({ email: "", password: "" });
+const BackButton = styled.button`
+  border: none;
+  background: transparent;
+  color: #b6aaff;
+  font-size: 11px;
+  font-weight: 750;
+  cursor: pointer;
+  padding: 10px;
+`;
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+const Spinner = styled.span`
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  flex-shrink: 0;
+  border: 2px solid rgba(255,255,255,.35);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
 
-  // 1. Email & Password Sign In
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+`;
 
-    Swal.fire({
-      title: "Please wait...",
-      text: "Authenticating your session...",
-      allowOutsideClick: false,
-      didOpen: () => Swal.showLoading(),
-      background: "#ffffff",
-      color: "#111827",
-    });
+const BottomLogin = styled.div`
+  margin-top: 23px;
+  text-align: center;
+  color: #96a2b7;
+  font-size: 11px;
 
-    try {
-      const { email, password } = form;
-      await signInWithEmailAndPassword(auth, email, password);
-      Swal.fire({
-        title: "Success ✅",
-        text: "Logged in successfully",
-        icon: "success",
-        confirmButtonColor: GreenBtnBg,
-        background: "#ffffff",
-        color: "#111827",
-      });
-      router.push("/dashboard");
-    } catch (error) {
-      Swal.fire({
-        title: "Login Failed ❌",
-        text: error.message,
-        icon: "error",
-        confirmButtonColor: GreenBtnBg,
-        background: "#ffffff",
-        color: "#111827",
-      });
-    }
-  };
+  a {
+    color: #b6aaff;
+    font-weight: 850;
+    text-decoration: none;
+  }
 
-  // 2. Continue with Google Sign In
-  const handleGoogleSignIn = async () => {
-    // Swal.fire({
-    //   title: "Connecting...",
-    //   text: "Opening Google Sign-In...",
-    //   allowOutsideClick: false,
-    //   didOpen: () => Swal.showLoading(),
-    //   background: "#ffffff",
-    //   color: "#111827",
-    // });
+  a:hover {
+    text-decoration: underline;
+  }
+`;
 
-    try {
-      const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
-      Swal.fire({
-        title: "Success ✅",
-        text: "Signed in with Google successfully",
-        icon: "success",
-        confirmButtonColor: GreenBtnBg,
-        background: "#ffffff",
-        color: "#111827",
-      });
-      router.push("/dashboard");
-    } catch (error) {
-      Swal.fire({
-        title: "Google Sign-In Failed ❌",
-        text: error.message,
-        icon: "error",
-        confirmButtonColor: GreenBtnBg,
-        background: "#ffffff",
-        color: "#111827",
-      });
-    }
-  };
+const SecureNote = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 23px;
+  padding-top: 18px;
+  border-top: 1px solid #29354a;
+  color: #7e8ba2;
+  font-size: 9px;
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setLoading(false);
-      if (user) router.push("/dashboard");
-    });
+  span {
+    color: #70dcb5;
+    font-size: 15px;
+  }
+`;
 
-    return () => unsubscribe();
-  }, [router]);
+const Footer = styled.footer`
+  max-width: 1300px;
+  margin: auto;
+  padding: 15px 30px 25px;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  color: #69768d;
+  font-size: 10px;
 
-  if (loading) return <LoadingContainer>Loading...</LoadingContainer>;
-
-  return (
-    <PageContainer>
-      {/* HEADER LOGO ICON AND TITLE */}
-      <HeaderWrapper>
-        <IconHeaderBadge>
-          <LogIn />
-        </IconHeaderBadge>
-        <Title>Welcome back</Title>
-        <Subtitle>Log in to your account</Subtitle>
-      </HeaderWrapper>
-
-      {/* LOGIN CARD CONTAINER */}
-      <AuthCard>
-        {/* GOOGLE SIGN IN BUTTON */}
-        {/* <GoogleButton type="button" onClick={handleGoogleSignIn}>
-          <svg viewBox="0 0 24 24">
-            <path
-              fill="#4285F4"
-              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-            />
-            <path
-              fill="#34A853"
-              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-            />
-            <path
-              fill="#FBBC05"
-              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
-            />
-            <path
-              fill="#EA4335"
-              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
-            />
-          </svg>
-          Continue with Google
-        </GoogleButton> */}
-
-        {/* <Divider>
-          <span>OR</span>
-        </Divider> */}
-
-        {/* EMAIL / PASSWORD FORM */}
-        <Form onSubmit={handleSubmit}>
-          <FormGroup>
-            <Label htmlFor="email">Email</Label>
-            <InputWrapper>
-              <InputIconWrapper>
-                <Mail />
-              </InputIconWrapper>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="you@example.com"
-                value={form.email}
-                onChange={handleChange}
-                required
-              />
-            </InputWrapper>
-          </FormGroup>
-
-          <FormGroup>
-            <LabelRow>
-              <Label htmlFor="password">Password</Label>
-              <ForgotLink onClick={() => router.push("/forgot-password")}>
-                Forgot password?
-              </ForgotLink>
-            </LabelRow>
-            <InputWrapper>
-              <InputIconWrapper>
-                <Lock />
-              </InputIconWrapper>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="••••••••"
-                value={form.password}
-                onChange={handleChange}
-                required
-              />
-            </InputWrapper>
-          </FormGroup>
-
-          <SubmitButton type="submit">Log in</SubmitButton>
-        </Form>
-      </AuthCard>
-
-      {/* FOOTER SIGN UP LINK */}
-      <FooterText>
-        Don't have an account?{" "}
-        <span onClick={() => router.push("/signup")}>Create one</span>
-      </FooterText>
-    </PageContainer>
-  );
-}
+  @media(max-width: 600px) {
+    padding: 0 20px 25px;
+    flex-direction: column;
+    align-items: center;
+  }
+`;
