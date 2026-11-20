@@ -21,9 +21,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "LIFEOS",
-  description: "LIFEOS",
-  applicationName: "YOUR LIFE. ONE ORGANised SYSTEM",
+  title: "ECHOBYTE PAY",
+  description: "ECHOBYTE PAY",
+  applicationName: "YOUR SECURE PAYMENT SYSTEM",
 
   manifest: "/manifest.json",
 
@@ -34,7 +34,7 @@ export const metadata = {
 
   appleWebApp: {
     capable: true,
-    title: "LIFEOS",
+    title: "ECHOBYTE PAY",
     statusBarStyle: "default",
   },
 
