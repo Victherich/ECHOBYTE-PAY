@@ -1152,8 +1152,8 @@ if (loading) {
               </Amount>
               <CurrencyCode>{session.currency}</CurrencyCode>
 
-              <CurrencyLabel>CHANGE CURRENCY</CurrencyLabel>
-              <CurrencySelect
+              {/* <CurrencyLabel>CHANGE CURRENCY</CurrencyLabel> */}
+              {/* <CurrencySelect
                 value={session.currency}
                 disabled={currencyLoading || isCancelled || isSuccessful}
                 onChange={(e) => changeCurrency(e.target.value)}
@@ -1163,7 +1163,7 @@ if (loading) {
                     {currency.name} ({currency.code})
                   </option>
                 ))}
-              </CurrencySelect>
+              </CurrencySelect> */}
 
               {currencyLoading && (
                 <ConversionText>Converting currency...</ConversionText>
